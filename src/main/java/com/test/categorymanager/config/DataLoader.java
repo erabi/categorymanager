@@ -11,7 +11,6 @@ import java.util.List;
 
 @Component
 public class DataLoader {
-
     private final CategoryService categoryService;
 
     public DataLoader(CategoryService categoryService) {
@@ -20,16 +19,15 @@ public class DataLoader {
 
     @EventListener
     public void insertCategories(ApplicationReadyEvent event) {
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; i <= 100; i++) {
             List<Integer> list = List.of(i);
             categoryService.save(Category.fromList(list));
-            System.out.println(list);
             createChildren(list, 0);
         }
     }
 
     private void createChildren(List<Integer> list, int index) {
-        if (list.size() == 4) {
+        if (list.size() == 5) {
             return;
         } else {
             int countChildren = (int) ((Math.random() * (10 - 1)) + 1);
@@ -37,7 +35,6 @@ public class DataLoader {
                 List<Integer> childList = new ArrayList<>(list);
                 childList.add(i + 1);
                 categoryService.save(Category.fromList(childList));
-                System.out.println(childList);
                 createChildren(childList, index + 1);
             }
         }
