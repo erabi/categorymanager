@@ -1,4 +1,4 @@
-package com.test.categorymanager.config;
+package com.test.categorymanager.config.database;
 
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.service.CategoryService;

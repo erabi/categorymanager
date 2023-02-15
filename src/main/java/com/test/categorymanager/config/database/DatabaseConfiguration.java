@@ -1,4 +1,4 @@
-package com.test.categorymanager.config;
+package com.test.categorymanager.config.database;
 
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
