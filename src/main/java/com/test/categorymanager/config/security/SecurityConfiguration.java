@@ -23,7 +23,7 @@ public class SecurityConfiguration {
     public InMemoryUserDetailsManager userDetailsService() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         UserDetails user = User.withUsername("user1")
-                .password(encoder.encode("user1Pass"))
+                .password(encoder.encode("user1Pwd"))
                 .roles("USER")
                 .build();
         return new InMemoryUserDetailsManager(user);
