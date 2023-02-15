@@ -48,17 +48,36 @@ public class CategoryControllerIntegrationTest extends CategorymanagerApplicatio
 
     @Test
     public void getCategories_withNoPageParam_shouldReturnCategoriesDefaultPage0_and_HttpStatus200() throws Exception {
-        mockMvc.perform(addBasicAuth(get(CATEGORIES_ENDPOINT))).andExpect(status().isOk()).andExpect(jsonPath("size").value(20)).andExpect(jsonPath("number").value(0)).andExpect(jsonPath("$.content", hasSize(20))).andExpect(jsonPath("$.content.[0].name").value("category.1")).andExpect(jsonPath("$.content.[19].name").value("category.1.1.2"));
+        mockMvc.perform(addBasicAuth(get(CATEGORIES_ENDPOINT)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("size").value(20))
+                .andExpect(jsonPath("number").value(0))
+                .andExpect(jsonPath("$.content", hasSize(20)))
+                .andExpect(jsonPath("$.content.[0].name").value("category.1"))
+                .andExpect(jsonPath("$.content.[19].name").value("category.1.1.2"));
     }
 
     @Test
     public void getCategories_withNegativePageParam_shouldReturnCategoriesDefaultPage0_and_HttpStatus200() throws Exception {
-        mockMvc.perform(addBasicAuth(get(CATEGORIES_ENDPOINT).param("page", String.valueOf(-2)))).andExpect(status().isOk()).andExpect(jsonPath("size").value(20)).andExpect(jsonPath("number").value(0)).andExpect(jsonPath("$.content", hasSize(20))).andExpect(jsonPath("$.content.[0].name").value("category.1")).andExpect(jsonPath("$.content.[19].name").value("category.1.1.2"));
+        mockMvc.perform(addBasicAuth(get(CATEGORIES_ENDPOINT).param("page", String.valueOf(-2))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("size").value(20))
+                .andExpect(jsonPath("number").value(0))
+                .andExpect(jsonPath("$.content", hasSize(20)))
+                .andExpect(jsonPath("$.content.[0].name").value("category.1"))
+                .andExpect(jsonPath("$.content.[19].name").value("category.1.1.2"));
     }
 
     @Test
     public void getCategories_withPage2_shouldReturnCategoriesPage2_and_HttpStatus200() throws Exception {
-        mockMvc.perform(addBasicAuth(get(CATEGORIES_ENDPOINT).param("page", String.valueOf(2)))).andExpect(status().isOk()).andExpect(jsonPath("size").value(20)).andExpect(jsonPath("$.pageable.offset").value(40)).andExpect(jsonPath("number").value(2)).andExpect(jsonPath("$.content", hasSize(20))).andExpect(jsonPath("$.content.[0].name").value("category.1.6.8.7.5")).andExpect(jsonPath("$.content.[19].name").value("category.10.1.1.1.2"));
+        mockMvc.perform(addBasicAuth(get(CATEGORIES_ENDPOINT).param("page", String.valueOf(2))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("size").value(20))
+                .andExpect(jsonPath("$.pageable.offset").value(40))
+                .andExpect(jsonPath("number").value(2))
+                .andExpect(jsonPath("$.content", hasSize(20)))
+                .andExpect(jsonPath("$.content.[0].name").value("category.1.6.8.7.5"))
+                .andExpect(jsonPath("$.content.[19].name").value("category.10.1.1.1.2"));
     }
 }
 
