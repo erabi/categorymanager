@@ -6,10 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -27,7 +25,18 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getCategories((page >= 0) ? page : 0, NUMBER_OF_ELEMENTS_PER_PAGE), HttpStatus.OK);
     }
 
-    //TODO : add category
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+        if (category == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (categoryService.getCategoryByName(category.getName()) != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category [" + category.getName() + "] already exists");
+        }
+
+        return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.OK);
+    }
 
     //TODO : edit category name
 

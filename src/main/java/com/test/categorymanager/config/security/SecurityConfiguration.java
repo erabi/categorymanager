@@ -25,21 +25,18 @@ public class SecurityConfiguration {
         UserDetails user = User.withUsername("user1")
                 .password(encoder.encode("user1Pwd"))
                 .roles("USER")
+                .authorities("ROLE_USER")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                .requestMatchers("/securityNone")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic()
+        http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated().and().httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint);
-        // http.addFilterAfter(new CustomFilter(), BasicAuthenticationFilter.class);
         return http.build();
     }
 }

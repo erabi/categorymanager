@@ -8,4 +8,8 @@ public interface CategoryService {
     Category save(Category category);
 
     Page<Category> getCategories(Integer page, Integer numberOfElements);
+
+    Category addCategory(Category category);
+
+    Category getCategoryByName(String name);
 }

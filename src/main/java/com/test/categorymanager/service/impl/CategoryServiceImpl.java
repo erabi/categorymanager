@@ -27,4 +27,14 @@ public class CategoryServiceImpl implements CategoryService {
         Pageable categoryPageable = PageRequest.of((page != null) ? page : 0, numberOfElements);
         return categoryRepository.findAllOrderByName(categoryPageable);
     }
+
+    @Override
+    public Category addCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category getCategoryByName(String name) {
+        return categoryRepository.findByName(name);
+    }
 }

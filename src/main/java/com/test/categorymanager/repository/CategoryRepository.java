@@ -12,5 +12,7 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
 
     @Query("SELECT c FROM Category c ORDER BY c.name")
     Page<Category> findAllOrderByName(Pageable pageable);
+
+    Category findByName(String name);
 }
 
