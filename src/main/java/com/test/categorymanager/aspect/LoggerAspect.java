@@ -16,12 +16,12 @@ public class LoggerAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggerAspect.class);
 
-    @Pointcut("execution(* com.test.categorymanager.service.impl.*.save(*))")
+    @Pointcut("execution(* com.test.categorymanager.service.impl.*.save*(*))")
     public void savePointcut() {
     }
 
     @AfterReturning(pointcut = "savePointcut()", returning = "object")
     public void logAfterSave(JoinPoint jointPoint, Object object) {
-        LOGGER.info("New record added in database: [" + object.toString() + "]");
+        LOGGER.info("Category saved: [" + object.toString() + "]");
     }
 }

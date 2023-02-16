@@ -2,29 +2,30 @@ package com.test.categorymanager.service;
 
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.repository.CategoryRepository;
-import com.test.categorymanager.service.impl.CategoryServiceImpl;
+import com.test.categorymanager.service.impl.CategoryManagementServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryServiceImplTest {
+public class CategoryConsultationServiceImplTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
     @InjectMocks
-    private CategoryServiceImpl categoryService;
+    private CategoryManagementServiceImpl categoryManagementService;
 
     @Test
     public void save_withCategory_shouldReturnCategory() {
         Category category = new Category("category.1.2.3");
         when(categoryRepository.save(category)).thenReturn(category);
-        Category savedCategory = categoryService.save(category);
+        Category savedCategory = categoryManagementService.save(category);
 
         assertEquals(savedCategory, category);
     }

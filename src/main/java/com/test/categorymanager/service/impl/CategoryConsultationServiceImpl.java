@@ -2,24 +2,21 @@ package com.test.categorymanager.service.impl;
 
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.repository.CategoryRepository;
-import com.test.categorymanager.service.CategoryService;
+import com.test.categorymanager.service.CategoryConsultationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryConsultationServiceImpl implements CategoryConsultationService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryConsultationServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-    }
-
-    @Override
-    public Category save(Category category) {
-        return this.categoryRepository.save(category);
     }
 
     @Override
@@ -29,12 +26,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category addCategory(Category category) {
-        return categoryRepository.save(category);
+    public Optional<Category> getByName(String name) {
+        return categoryRepository.findByName(name);
     }
 
     @Override
-    public Category getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public Optional<Category> getById(Long id) {
+        return categoryRepository.findById(id);
     }
 }

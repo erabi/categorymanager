@@ -1,7 +1,7 @@
 package com.test.categorymanager.config.database;
 
 import com.test.categorymanager.model.Category;
-import com.test.categorymanager.service.CategoryService;
+import com.test.categorymanager.service.CategoryManagementService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -11,30 +11,30 @@ import java.util.List;
 
 @Component
 public class DataLoader {
-    private final CategoryService categoryService;
+    private final CategoryManagementService categoryManagementService;
 
-    public DataLoader(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public DataLoader(CategoryManagementService categoryManagementService) {
+        this.categoryManagementService = categoryManagementService;
     }
 
     @EventListener
     public void insertCategories(ApplicationReadyEvent event) {
         for (int i = 1; i <= 100; i++) {
             List<Integer> list = List.of(i);
-            categoryService.save(Category.fromList(list));
+            categoryManagementService.save(Category.fromList(list));
             createChildren(list, 0);
         }
     }
 
     private void createChildren(List<Integer> list, int index) {
-        if (list.size() == 5) {
+        if (list.size() == 3) {
             return;
         } else {
             int countChildren = (int) ((Math.random() * (10 - 1)) + 1);
             for (int i = 0; i < countChildren; i++) {
                 List<Integer> childList = new ArrayList<>(list);
                 childList.add(i + 1);
-                categoryService.save(Category.fromList(childList));
+                categoryManagementService.save(Category.fromList(childList));
                 createChildren(childList, index + 1);
             }
         }

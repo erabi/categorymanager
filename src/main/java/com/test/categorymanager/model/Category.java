@@ -7,6 +7,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
@@ -19,7 +20,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String id;
+    private Long id;
 
     @NonNull
     @Column(name = "name")
@@ -34,5 +35,12 @@ public class Category {
                 list.stream()
                         .map(Object::toString)
                         .collect(Collectors.joining(".")));
+    }
+
+    public static boolean isValidName(String name) {
+        return Pattern.matches("^(category)(\\.[1-9]\\d*)(\\.([1-9]|10)){0,10}$", name);
+    }
+    public String getParentName() {
+        return isValidName(this.getName()) ? this.getName().substring(0, this.getName().lastIndexOf('.')) : "";
     }
 }
