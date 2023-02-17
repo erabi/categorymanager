@@ -13,12 +13,12 @@ import java.util.List;
 @Component
 public class DataPublisher {
 
-    private ApplicationEventPublisher applicationEventPublisher;
     private final CategoryManipulationService categoryManipulationService;
-    private final int ORPHAN_CATEGORIES = 1000;
-    private final int DESCENDANTS = 4;
+    private final int ORPHAN_CATEGORIES = 50;
+    private final int DESCENDANTS = 5;
     private final int MAX_CHILDREN = 10;
-    private final int BATCH_SIZE = 100;
+    private final int BATCH_SIZE = 10;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public DataPublisher(CategoryManipulationService categoryManipulationService,
                          ApplicationEventPublisher applicationEventPublisher) {
@@ -36,7 +36,7 @@ public class DataPublisher {
             categories.add(Category.fromList(list));
             createChildren(list, 0, childCategories);
 
-            if (categories.size() == 100) {
+            if (categories.size() == BATCH_SIZE) {
                 publishInsertCategoriesEvent(categories);
                 categories.clear();
             }
@@ -44,18 +44,17 @@ public class DataPublisher {
     }
 
     private void createChildren(List<Integer> list, int index, List<Category> childCategories) {
-        if (list.size() == DESCENDANTS + 1) {
-            childCategories.add(Category.fromList(list));
+        if (childCategories.size() == BATCH_SIZE) {
+            publishInsertCategoriesEvent(childCategories);
+            childCategories.clear();
+        }
 
-            if (childCategories.size() == BATCH_SIZE) {
-                publishInsertCategoriesEvent(childCategories);
-                childCategories.clear();
-            }
-        } else {
+        if (list.size() < DESCENDANTS + 1) {
             int countChildren = (int) ((Math.random() * (MAX_CHILDREN - 1)) + 1);
             for (int i = 0; i < countChildren; i++) {
                 List<Integer> childList = new ArrayList<>(list);
                 childList.add(i + 1);
+                childCategories.add(Category.fromList(childList));
                 createChildren(childList, index + 1, childCategories);
             }
         }

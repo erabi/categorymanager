@@ -28,6 +28,12 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="createIndex_index_category" author="erabibisoa">
+        <createIndex indexName="index_category" tableName="category">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
     <!--
         On pourra ajouter une table user pour gérer l'authentification
     -->

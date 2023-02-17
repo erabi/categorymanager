@@ -21,7 +21,6 @@ public class BatchLoader implements ApplicationListener<InsertCategoryEvent> {
     @Override
     public void onApplicationEvent(InsertCategoryEvent insertCategoryEvent) {
         List<Category> categories = insertCategoryEvent.getCategories();
-        System.out.println(categories);
         categories.forEach(entityManager::persist);
         entityManager.flush();
         entityManager.clear();
