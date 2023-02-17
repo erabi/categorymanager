@@ -4,7 +4,7 @@ import com.test.categorymanager.aspect.exception.CategoryNotExistsException;
 import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.model.Category;
 
-public interface CategoryManagementService {
+public interface CategoryManipulationService {
 
     Category save(Category category);
 

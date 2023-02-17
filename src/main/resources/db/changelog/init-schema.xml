@@ -6,6 +6,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
+    <changeSet  id="createSequenceCategorySeq" author="erabibisoa">
+        <createSequence  incrementBy="1"
+                         sequenceName="category_seq"
+                         startValue="0"/>
+    </changeSet>
+
     <changeSet id="createTableCategory" author="erabibisoa">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -13,7 +19,7 @@
             </not>
         </preConditions>
         <createTable tableName="category">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" valueSequenceNext="category_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_category"/>
             </column>
             <column name="name" type="varchar(250)">
@@ -22,22 +28,29 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="createTableUser" author="erabibisoa">
-        <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="user"/>
-            </not>
-        </preConditions>
-        <createTable tableName="user">
-            <column autoIncrement="true" name="id" type="smallint">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
-            </column>
-            <column name="username" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="password" type="varchar(250)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
+    <!--
+        On pourra ajouter une table user pour gérer l'authentification
+    -->
+    <!-- <changeSet id="createTableUser" author="erabibisoa">
+    <preConditions onFail="MARK_RAN">
+        <not>
+            <tableExists tableName="user"/>
+        </not>
+    </preConditions>
+
+<createTable tableName="user">
+        <column autoIncrement="true" name="id" type="smallint">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
+        </column>
+        <column name="username" type="varchar(20)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="password" type="varchar">
+            <constraints nullable="false"/>
+        </column>
+        <column name="role" type="varchar(20)">
+            <constraints nullable="false"/>
+        </column>
+    </createTable>
+    </changeSet>-->
 </databaseChangeLog>

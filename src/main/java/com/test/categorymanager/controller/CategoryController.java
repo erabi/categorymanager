@@ -6,9 +6,7 @@ import com.test.categorymanager.dto.CategoryDTO;
 import com.test.categorymanager.dto.mapper.CategoryMapper;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.service.CategoryConsultationService;
-import com.test.categorymanager.service.CategoryManagementService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.test.categorymanager.service.CategoryManipulationService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,13 +21,13 @@ public class CategoryController {
 
     private static final Integer NUMBER_OF_ELEMENTS_PER_PAGE = 20;
     private final CategoryConsultationService categoryConsultationService;
-    private final CategoryManagementService categoryManagementService;
+    private final CategoryManipulationService categoryManipulationService;
 
     private final CategoryMapper categoryMapper;
 
-    public CategoryController(CategoryConsultationService categoryConsultationService, CategoryManagementService categoryManagementService, CategoryMapper categoryMapper) {
+    public CategoryController(CategoryConsultationService categoryConsultationService, CategoryManipulationService categoryManipulationService, CategoryMapper categoryMapper) {
         this.categoryConsultationService = categoryConsultationService;
-        this.categoryManagementService = categoryManagementService;
+        this.categoryManipulationService = categoryManipulationService;
         this.categoryMapper = categoryMapper;
     }
 
@@ -46,10 +44,9 @@ public class CategoryController {
         if (categoryConsultationService.getByName(category.getName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Category [" + category.getName() + "] already exists");
         }
-        return new ResponseEntity<>(categoryMapper.toDTO(categoryManagementService.save(category)), HttpStatus.OK);
+        return new ResponseEntity<>(categoryMapper.toDTO(categoryManipulationService.save(category)), HttpStatus.OK);
     }
 
-    //TODO : edit category name
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> updateCategoryName(@PathVariable Long id, @RequestBody @NonNull CategoryDTO categoryDTO) {
         if (!id.equals(categoryDTO.getId())) {
@@ -62,7 +59,7 @@ public class CategoryController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Category name [" + categoryDTO.getName() + "] alreqdy exists");
         }
         try {
-            categoryManagementService.cascadeUpdateName(categoryMapper.fromDTO(categoryDTO));
+            categoryManipulationService.cascadeUpdateName(categoryMapper.fromDTO(categoryDTO));
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalCategoryNameFormatException | CategoryNotExistsException ex) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), ex);

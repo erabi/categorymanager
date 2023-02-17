@@ -4,17 +4,17 @@ import com.test.categorymanager.aspect.exception.CategoryNotExistsException;
 import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.repository.CategoryRepository;
-import com.test.categorymanager.service.CategoryManagementService;
+import com.test.categorymanager.service.CategoryManipulationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CategoryManagementServiceImpl implements CategoryManagementService {
+public class CategoryManipulationServiceImpl implements CategoryManipulationService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryManagementServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryManipulationServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 

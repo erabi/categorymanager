@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_generator")
+    @SequenceGenerator(name = "category_generator", sequenceName = "category_seq", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
