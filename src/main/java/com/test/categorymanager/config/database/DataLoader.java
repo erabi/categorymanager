@@ -12,6 +12,9 @@ import java.util.List;
 @Component
 public class DataLoader {
     private final CategoryManagementService categoryManagementService;
+    private final int ORPHAN_CATEGORIES = 100;
+    private final int DESCENDANTS = 4;
+    private final int MAX_CHILDREN = 10;
 
     public DataLoader(CategoryManagementService categoryManagementService) {
         this.categoryManagementService = categoryManagementService;
@@ -19,7 +22,7 @@ public class DataLoader {
 
     @EventListener
     public void insertCategories(ApplicationReadyEvent event) {
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= ORPHAN_CATEGORIES; i++) {
             List<Integer> list = List.of(i);
             categoryManagementService.save(Category.fromList(list));
             createChildren(list, 0);
@@ -27,10 +30,9 @@ public class DataLoader {
     }
 
     private void createChildren(List<Integer> list, int index) {
-        if (list.size() == 3) {
-            return;
+        if (list.size() == DESCENDANTS + 1) {
         } else {
-            int countChildren = (int) ((Math.random() * (10 - 1)) + 1);
+            int countChildren = (int) ((Math.random() * (MAX_CHILDREN - 1)) + 1);
             for (int i = 0; i < countChildren; i++) {
                 List<Integer> childList = new ArrayList<>(list);
                 childList.add(i + 1);

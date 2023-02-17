@@ -16,10 +16,17 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
     @Query("SELECT c FROM Category c ORDER BY c.name")
     Page<Category> findAllOrderByName(Pageable pageable);
 
-    Optional<Category> findByName(String name);
-
     Optional<Category> findById(Long id);
 
+    Optional<Category> findByName(String name);
+
+    List<Category> findByNameIn(List<String> ancestors);
+
     List<Category> findByNameStartsWith(String name);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM category c WHERE REGEXP_MATCHES(c.name, ?1)")
+    List<Category> findChildren(String regex);
+
 }
 
