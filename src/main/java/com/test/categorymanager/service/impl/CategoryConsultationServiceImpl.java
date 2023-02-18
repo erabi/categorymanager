@@ -20,9 +20,14 @@ public class CategoryConsultationServiceImpl implements CategoryConsultationServ
     }
 
     @Override
-    public Page<Category> getCategories(Integer page, Integer numberOfElements) {
-        Pageable categoryPageable = PageRequest.of((page != null) ? page : 0, numberOfElements);
+    public Page<Category> getAll(Integer page, Integer numberOfElementsPerPage) {
+        Pageable categoryPageable = PageRequest.of((page != null) ? page : 0, numberOfElementsPerPage);
         return categoryRepository.findAllOrderByName(categoryPageable);
+    }
+
+    @Override
+    public Optional<Category> getById(Long id) {
+        return categoryRepository.findById(id);
     }
 
     @Override
@@ -31,7 +36,8 @@ public class CategoryConsultationServiceImpl implements CategoryConsultationServ
     }
 
     @Override
-    public Optional<Category> getById(Long id) {
-        return categoryRepository.findById(id);
+    public Page<Category> getByNameStartsWith(String name, Integer page, Integer numberOfElementsPerPage) {
+        Pageable categoryPageable = PageRequest.of((page != null) ? page : 0, numberOfElementsPerPage);
+        return categoryRepository.findByNameStartsWith(name, categoryPageable);
     }
 }

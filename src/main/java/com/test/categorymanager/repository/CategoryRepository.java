@@ -24,9 +24,10 @@ public interface CategoryRepository extends JpaRepository<Category, String> {
 
     List<Category> findByNameStartsWith(String name);
 
+    Page<Category> findByNameStartsWith(String name, Pageable categoryPageable);
+
     @Query(nativeQuery = true,
             value = "SELECT * FROM category c WHERE REGEXP_MATCHES(c.name, ?1)")
     List<Category> findChildren(String regex);
-
 }
 

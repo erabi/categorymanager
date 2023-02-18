@@ -10,6 +10,7 @@ import com.test.categorymanager.dto.mapper.CategoryWithFamilyMapper;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.service.CategoryConsultationService;
 import com.test.categorymanager.service.CategoryManipulationService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,8 +40,14 @@ public class CategoryController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CategoryDTO>> getCategories(@RequestParam(value = "page", defaultValue = "0") Integer page) {
-        Page<Category> categoryPage = categoryConsultationService.getCategories((page >= 0) ? page : 0, NUMBER_OF_ELEMENTS_PER_PAGE);
+    public ResponseEntity<Page<CategoryDTO>> getCategories(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                           @RequestParam(required = false, value = "name") String name) {
+        Page<Category> categoryPage;
+        if (StringUtils.isNotBlank(name)) {
+            categoryPage = categoryConsultationService.getByNameStartsWith(name, (page >= 0) ? page : 0, NUMBER_OF_ELEMENTS_PER_PAGE);
+        } else {
+            categoryPage = categoryConsultationService.getAll((page >= 0) ? page : 0, NUMBER_OF_ELEMENTS_PER_PAGE);
+        }
         Page<CategoryDTO> categoryDTOPage = categoryPage.map(categoryMapper::toDTO);
 
         return new ResponseEntity<>(categoryDTOPage, HttpStatus.OK);
@@ -56,7 +63,6 @@ public class CategoryController {
         return new ResponseEntity<>(category.map(categoryWithFamilyMapper::toDTO).get(), HttpStatus.OK);
     }
 
-    //TODO : get category by name like
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody @NonNull Category category) {
         if (categoryConsultationService.getByName(category.getName()).isPresent()) {
