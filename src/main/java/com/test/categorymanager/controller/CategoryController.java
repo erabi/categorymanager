@@ -1,5 +1,6 @@
 package com.test.categorymanager.controller;
 
+import com.test.categorymanager.aspect.exception.CategoryHasChildrenException;
 import com.test.categorymanager.aspect.exception.CategoryNotExistsException;
 import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.dto.CategoryDTO;
@@ -47,28 +48,40 @@ public class CategoryController {
         return new ResponseEntity<>(categoryMapper.toDTO(categoryManipulationService.save(category)), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CategoryDTO> updateCategoryName(@PathVariable Long id, @RequestBody @NonNull CategoryDTO categoryDTO) {
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateCategoryName(@PathVariable Long id, @RequestBody @NonNull CategoryDTO categoryDTO) {
         if (!id.equals(categoryDTO.getId())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (categoryConsultationService.getById(id).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category doesn't exist in database", new CategoryNotExistsException(id));
         }
         if (categoryConsultationService.getByName(categoryDTO.getName()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Category name [" + categoryDTO.getName() + "] alreqdy exists");
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Category name [" + categoryDTO.getName() + "] already exists");
         }
         try {
             categoryManipulationService.cascadeUpdateName(categoryMapper.fromDTO(categoryDTO));
+            // On pourrait retourner le nombre d'enfants ayant été modifiés en cascade
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalCategoryNameFormatException | CategoryNotExistsException ex) {
+        } catch (IllegalCategoryNameFormatException ex) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), ex);
+        } catch (CategoryNotExistsException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
         }
     }
 
-    //TODO : delete childless category
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteChildlessCategory(@PathVariable @NonNull Long id) {
+        categoryConsultationService.getById(id).ifPresentOrElse(c -> {
+            try {
+                categoryManipulationService.deleteChildlessCategory(c);
+            } catch (CategoryHasChildrenException ex) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), ex);
+            }
+        }, () -> {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category doesn't exist in database", new CategoryNotExistsException(id));
+        });
 
-    //TODO : get category
-
-    //TODO : get category by name like
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

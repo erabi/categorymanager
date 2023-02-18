@@ -6,7 +6,6 @@ import lombok.Getter;
 public class CategoryNotExistsException extends Exception {
 
     private final Long idCategory;
-    private final String message = "No category found in database for id: [" + this.getIdCategory() + "].";
 
     public CategoryNotExistsException(Long id) {
         super();
@@ -15,5 +14,9 @@ public class CategoryNotExistsException extends Exception {
 
     private String getIdCategory() {
         return String.valueOf(this.idCategory);
+    }
+
+    public String getMessage() {
+        return "No category found in database for id: [" + this.getIdCategory() + "].";
     }
 }
