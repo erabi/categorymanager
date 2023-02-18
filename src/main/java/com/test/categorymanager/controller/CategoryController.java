@@ -4,7 +4,9 @@ import com.test.categorymanager.aspect.exception.CategoryHasChildrenException;
 import com.test.categorymanager.aspect.exception.CategoryNotExistsException;
 import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.dto.CategoryDTO;
+import com.test.categorymanager.dto.CategoryWithFamilyDTO;
 import com.test.categorymanager.dto.mapper.CategoryMapper;
+import com.test.categorymanager.dto.mapper.CategoryWithFamilyMapper;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.service.CategoryConsultationService;
 import com.test.categorymanager.service.CategoryManipulationService;
@@ -16,6 +18,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
@@ -25,11 +29,13 @@ public class CategoryController {
     private final CategoryManipulationService categoryManipulationService;
 
     private final CategoryMapper categoryMapper;
+    private final CategoryWithFamilyMapper categoryWithFamilyMapper;
 
-    public CategoryController(CategoryConsultationService categoryConsultationService, CategoryManipulationService categoryManipulationService, CategoryMapper categoryMapper) {
+    public CategoryController(CategoryConsultationService categoryConsultationService, CategoryManipulationService categoryManipulationService, CategoryMapper categoryMapper, CategoryWithFamilyMapper categoryWithFamilyMapper) {
         this.categoryConsultationService = categoryConsultationService;
         this.categoryManipulationService = categoryManipulationService;
         this.categoryMapper = categoryMapper;
+        this.categoryWithFamilyMapper = categoryWithFamilyMapper;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,11 +46,23 @@ public class CategoryController {
         return new ResponseEntity<>(categoryDTOPage, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CategoryWithFamilyDTO> getCategoryById(@PathVariable @NonNull Long id) {
+        Optional<Category> category = categoryConsultationService.getById(id);
+        if (category.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category doesn't exist in database", new CategoryNotExistsException(id));
+        }
+
+        return new ResponseEntity<>(category.map(categoryWithFamilyMapper::toDTO).get(), HttpStatus.OK);
+    }
+
+    //TODO : get category by name like
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody @NonNull Category category) {
         if (categoryConsultationService.getByName(category.getName()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Category [" + category.getName() + "] already exists");
         }
+
         return new ResponseEntity<>(categoryMapper.toDTO(categoryManipulationService.save(category)), HttpStatus.OK);
     }
 
