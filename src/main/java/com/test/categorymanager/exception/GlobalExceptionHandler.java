@@ -1,4 +1,4 @@
-package com.test.categorymanager.aspect.exception;
+package com.test.categorymanager.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

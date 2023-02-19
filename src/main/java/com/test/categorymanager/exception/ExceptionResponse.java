@@ -1,5 +1,10 @@
-package com.test.categorymanager.aspect.exception;
+package com.test.categorymanager.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ExceptionResponse {
 
     private final String message;
@@ -16,13 +21,4 @@ public class ExceptionResponse {
             this.exceptionMessage = exceptionSource.getMessage();
         }
     }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getExceptionMessage() {
-        return exceptionMessage;
-    }
-
 }

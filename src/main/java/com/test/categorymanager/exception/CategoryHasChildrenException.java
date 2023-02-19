@@ -1,4 +1,4 @@
-package com.test.categorymanager.aspect.exception;
+package com.test.categorymanager.exception;
 
 import com.test.categorymanager.model.Category;
 import lombok.Getter;

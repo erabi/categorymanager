@@ -1,8 +1,8 @@
 package com.test.categorymanager.service.impl;
 
-import com.test.categorymanager.aspect.exception.CategoryHasChildrenException;
-import com.test.categorymanager.aspect.exception.CategoryNotExistsException;
-import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
+import com.test.categorymanager.exception.CategoryHasChildrenException;
+import com.test.categorymanager.exception.CategoryNotExistsException;
+import com.test.categorymanager.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.repository.CategoryRepository;
 import com.test.categorymanager.service.CategoryFamilyService;

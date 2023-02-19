@@ -1,6 +1,5 @@
 package com.test.categorymanager.model;
 
-import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

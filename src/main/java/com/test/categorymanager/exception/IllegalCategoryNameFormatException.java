@@ -1,4 +1,4 @@
-package com.test.categorymanager.aspect.exception;
+package com.test.categorymanager.exception;
 
 import lombok.Getter;
 
@@ -6,10 +6,13 @@ import lombok.Getter;
 public class IllegalCategoryNameFormatException extends Exception {
 
     private final String categoryName;
-    private final String message = "Category name [" + getCategoryName() + "] does not match naming requierements.";
 
     public IllegalCategoryNameFormatException(String categoryName) {
         super();
         this.categoryName = categoryName;
+    }
+
+    public String getMessage() {
+        return "Category name [" + getCategoryName() + "] does not match naming requierements.";
     }
 }

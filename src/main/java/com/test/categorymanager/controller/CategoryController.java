@@ -1,8 +1,8 @@
 package com.test.categorymanager.controller;
 
-import com.test.categorymanager.aspect.exception.CategoryHasChildrenException;
-import com.test.categorymanager.aspect.exception.CategoryNotExistsException;
-import com.test.categorymanager.aspect.exception.IllegalCategoryNameFormatException;
+import com.test.categorymanager.exception.CategoryHasChildrenException;
+import com.test.categorymanager.exception.CategoryNotExistsException;
+import com.test.categorymanager.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.dto.CategoryDTO;
 import com.test.categorymanager.dto.CategoryWithFamilyDTO;
 import com.test.categorymanager.dto.mapper.CategoryMapper;
