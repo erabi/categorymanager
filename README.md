@@ -18,7 +18,7 @@ Exécuter la commande `mvn spring-boot:run` à la racine du projet pour lancer l
 ## Base de données
 
 Une base de donnée HSQLDB "in memory" est embarquée dans l'application.
-Elle est créée au mancement de l'application et détruite lorsqu'on arrête l'application.
+Elle est créée au lancement de l'application et détruite lorsqu'on arrête l'application.
 
 Elle ne contient qu'une seule table, la table 'category'.
 
