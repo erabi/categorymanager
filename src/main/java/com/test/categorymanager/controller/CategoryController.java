@@ -1,12 +1,12 @@
 package com.test.categorymanager.controller;
 
-import com.test.categorymanager.exception.CategoryHasChildrenException;
-import com.test.categorymanager.exception.CategoryNotExistsException;
-import com.test.categorymanager.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.dto.CategoryDTO;
 import com.test.categorymanager.dto.CategoryWithFamilyDTO;
 import com.test.categorymanager.dto.mapper.CategoryMapper;
 import com.test.categorymanager.dto.mapper.CategoryWithFamilyMapper;
+import com.test.categorymanager.exception.CategoryHasChildrenException;
+import com.test.categorymanager.exception.CategoryNotExistsException;
+import com.test.categorymanager.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.service.CategoryConsultationService;
 import com.test.categorymanager.service.CategoryManipulationService;
@@ -65,11 +65,19 @@ public class CategoryController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody @NonNull Category category) {
-        if (categoryConsultationService.getByName(category.getName()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Category [" + category.getName() + "] already exists");
+        if (category.getId() != null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Category must not have id");
         }
 
-        return new ResponseEntity<>(categoryMapper.toDTO(categoryManipulationService.save(category)), HttpStatus.OK);
+        if (categoryConsultationService.getByName(category.getName()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Category [" + category.getName() + "] already exists");
+        }
+
+        try {
+            return new ResponseEntity<>(categoryMapper.toDTO(categoryManipulationService.save(category)), HttpStatus.OK);
+        } catch (IllegalCategoryNameFormatException ex) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), ex);
+        }
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

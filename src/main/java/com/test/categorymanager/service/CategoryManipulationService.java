@@ -7,7 +7,7 @@ import com.test.categorymanager.model.Category;
 
 public interface CategoryManipulationService {
 
-    Category save(Category category);
+    Category save(Category category) throws IllegalCategoryNameFormatException;
 
     void cascadeUpdateName(Category category) throws IllegalCategoryNameFormatException, CategoryNotExistsException;
 

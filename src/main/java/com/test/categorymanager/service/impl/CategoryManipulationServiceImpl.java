@@ -23,7 +23,10 @@ public class CategoryManipulationServiceImpl implements CategoryManipulationServ
     }
 
     @Override
-    public Category save(Category category) {
+    public Category save(Category category) throws IllegalCategoryNameFormatException {
+        if (!Category.isValidName(category.getName())) {
+            throw new IllegalCategoryNameFormatException(category.getName());
+        }
         return this.categoryRepository.save(category);
     }
 

@@ -1,5 +1,6 @@
 package com.test.categorymanager.service;
 
+import com.test.categorymanager.exception.IllegalCategoryNameFormatException;
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.repository.CategoryRepository;
 import com.test.categorymanager.service.impl.CategoryManipulationServiceImpl;
@@ -22,7 +23,7 @@ public class CategoryConsultationServiceImplTest {
     private CategoryManipulationServiceImpl categoryManagementService;
 
     @Test
-    public void save_withCategory_shouldReturnCategory() {
+    public void save_withCategory_shouldReturnCategory() throws IllegalCategoryNameFormatException {
         Category category = new Category("category.1.2.3");
         when(categoryRepository.save(category)).thenReturn(category);
         Category savedCategory = categoryManagementService.save(category);

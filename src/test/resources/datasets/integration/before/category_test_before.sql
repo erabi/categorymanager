@@ -62,3 +62,5 @@ INSERT INTO category(id, name) VALUES(57, 'category.10.1.1.1');
 INSERT INTO category(id, name) VALUES(58, 'category.10.1.1.1.1');
 INSERT INTO category(id, name) VALUES(59, 'category.10.1.1.1.2');
 INSERT INTO category(id, name) VALUES(60, 'category.10.1.1.1.3');
+
+ALTER SEQUENCE category_seq RESTART WITH 61;

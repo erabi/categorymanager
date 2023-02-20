@@ -1,16 +1,14 @@
 package com.test.categorymanager.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
@@ -41,6 +39,7 @@ public class Category {
     public static boolean isValidName(String name) {
         return Pattern.matches("^(category)(\\.[1-9]\\d*)(\\.([1-9]|10)){0,10}$", name);
     }
+
     public String getParentName() {
         return isValidName(this.getName()) ? this.getName().substring(0, this.getName().lastIndexOf('.')) : "";
     }
