@@ -2,6 +2,8 @@ package com.test.categorymanager.config.dataloader;
 
 import com.test.categorymanager.model.Category;
 import com.test.categorymanager.service.CategoryManipulationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -10,9 +12,20 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Afin que l'application se lance rapidement dans le cadre d'un environnement
+ * de test assimilé à un POC, j'ai choisi une infrastructure légère (HSQLDB pour la
+ * bdd) avec un chargmement des données au démarrage de l'application.
+ * <p>
+ * Pour gagner en rapidité au lancement et pour des raisons de performances
+ * j'ai limité le nombre de catégories orphelines à 50 (au lieu de 1000) et
+ * le nombre de descendants à 5 au lieu de 10 (l'impact d'ajout de niveau de
+ * descendant étant exponentiel le gain et conséquent).
+ */
 @Component
 public class DataPublisher {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DataPublisher.class);
     private final CategoryManipulationService categoryManipulationService;
     private final int ORPHAN_CATEGORIES = 50;
     private final int DESCENDANTS = 5;
@@ -41,6 +54,7 @@ public class DataPublisher {
                 categories.clear();
             }
         }
+        LOGGER.info("Finished loading categories into database.");
     }
 
     private void createChildren(List<Integer> list, int index, List<Category> childCategories) {
